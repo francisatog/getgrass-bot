@@ -4,6 +4,7 @@ const axios = require('axios');
 const { v4: uuidv4 } = require('uuid');
 const { SocksProxyAgent } = require('socks-proxy-agent');
 const { HttpsProxyAgent } = require('https-proxy-agent');
+const randomUseragent = require('random-useragent');
 
 class Bot {
   constructor(config) {
@@ -46,11 +47,11 @@ class Bot {
         ? new HttpsProxyAgent(formattedProxy)
         : new SocksProxyAgent(formattedProxy);
       const wsURL = `wss://${this.config.wssHost}`;
+      const user_agent = randomUseragent.getRandom();
       const ws = new WebSocket(wsURL, {
         agent,
         headers: {
-          'User-Agent':
-            'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:92.0) Gecko/20100101 Firefox/92.0',
+          'User-Agent': user_agent,
           Pragma: 'no-cache',
           'Accept-Language': 'uk-UA,uk;q=0.9,en-US;q=0.8,en;q=0.7',
           'Cache-Control': 'no-cache',
@@ -77,7 +78,7 @@ class Bot {
             result: {
               browser_id: uuidv4(),
               user_id: userID,
-              user_agent: 'Mozilla/5.0',
+              user_agent: user_agent,
               timestamp: Math.floor(Date.now() / 1000),
               device_type: 'desktop',
               version: '4.28.2',
